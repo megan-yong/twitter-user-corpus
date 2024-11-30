@@ -1,5 +1,6 @@
-# twitter user data analysis
+### twitter user data analysis
 
+# import libraries 
 library(tidyverse)
 library(tidytext)
 library(rtweet)
@@ -26,42 +27,42 @@ twitter_token <- create_token(
 
 
 # kennedy mcmann tweets 
-kmm <- get_timeline("@kennedymcmann", n=5000, include_rts = FALSE)
+kennedyTweets <- get_timeline("@kennedymcmann", n=5000, include_rts = FALSE)
 
 # clean data
-kmm$text <- gsub("https\\S*", " ", kmm$text) # removes links
-kmm$text <- gsub("@\\S*", " ", kmm$text) # removes @s
-kmm$text <- gsub("#\\S*", " ", kmm$text) # removes hashtags
-kmm$text <- gsub("amp", " ", kmm$text) # removes &
-kmm$text <- gsub("[[:digit:]]", " ", kmm$text) # removes digits
+kennedyTweets$text <- gsub("https\\S*", " ", kennedyTweets$text) # removes links
+kennedyTweets$text <- gsub("@\\S*", " ", kennedyTweets$text) # removes @s
+kennedyTweets$text <- gsub("#\\S*", " ", kennedyTweets$text) # removes hashtags
+kennedyTweets$text <- gsub("amp", " ", kennedyTweets$text) # removes &
+kennedyTweets$text <- gsub("[[:digit:]]", " ", kennedyTweets$text) # removes digits
 
 # mutate data
-kmm <- mutate(kmm, text = trimws(text), text = tolower(text))
+kennedyTweets <- mutate(kennedyTweets, text = trimws(text), text = tolower(text))
 
-# removing blank cells in text
-kmm_organic <- kmm %>% 
+# removing blank spaces in text
+kennedyTweets_organic <- kennedyTweets %>% 
   filter(str_detect(as.character(text), "[[:alpha:]]")) %>%
   filter(!is.na(text))
 
 # extract words from text
-kmm_words <- kmm_organic %>% 
+kennedyTweets_words <- kennedyTweets_organic %>% 
   select(id, text) %>% 
   unnest_tokens(word, text)
 
 # count words in text 
-kmm_count <- kmm_words %>% 
+kennedyWord_count <- kennedyTweets_words %>% 
   count(word, sort = TRUE) %>% 
   mutate(word = reorder(word, n))
 
-# remove the stop words / frequent unwanted words
+# remove the stop words
 data("stop_words")
 
-kmm_clean <- kmm_count %>%
+kennedyTweets_clean <- kennedyWord_count %>%
   filter(!word %in% stop_words$word)
 
 
 # bar chart plot
-kmm_clean %>%
+kennedyTweets_clean %>%
   top_n(15) %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(x = word, y = n)) +
