@@ -7,4 +7,5 @@ This project used R to analyse the top 15 most frequent words (excluding stop wo
 
 <h2>Remarks</h2>
 
-- Needs refining to remove stop words such as "it's" and "i'm".
+- Words need to be lemmatised deal with words such as "it's" and "i'm".
+- Update 2024: Unfortunately, since Twitter API is no longer free (thanks a lot Elon), I am unable to carry out these changes. 
